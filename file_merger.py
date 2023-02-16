@@ -6,7 +6,7 @@ Check the README.md for more information.
 
 """
 
-from file_merger import cli_main
+from merge_files import cli_main
 
 
 if __name__ == "__main__":

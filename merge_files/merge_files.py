@@ -1,11 +1,14 @@
 """File Merger CLI Tool"""
 import argparse
 import os
+from .merger import FileMerger
 
 
-def main(input_dir: str, output_dir: str, multiprocessing: bool, n_of_process: int,
-         chunk_file: int, chunk_line: int) -> None:
-    pass
+def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_line: int,
+         use_parallel: bool, n_of_process: int,) -> None:
+    file_merger = FileMerger(input_dir, output_dir, filename, chunk_file,
+                             chunk_line, use_parallel, n_of_process)
+    file_merger.merge_files()
 
 
 def cli_main():
@@ -16,22 +19,26 @@ def cli_main():
         )
     )
     parser.add_argument(
-        "-i", "--input-dir", type=str, default=os.getcwd(),
-        help=("A directory of files to be merged."
+        "-i", "--input-dir", type=str,
+        help=("A directory of files to be merged.")
+    )
+    parser.add_argument(
+        "-o", "--output-dir", type=str, default=f"{os.getcwd()}",
+        help=("A directory where the merged file will be saved. "
               "DEFAULT <current-directory>")
     )
     parser.add_argument(
-        "-o", "--output-dir", type=str, default=os.getcwd(),
-        help=("A directory where the merged file will be saved."
-              "DEFAULT <current-directory>")
+        "-f", "--filename", type=str, default="output.txt",
+        help=("A name of output file. "
+              "DEFAULT output.txt")
     )
     parser.add_argument(
-        "-m", "--multiprocessing", action="store_true",
-        help=("Use multiprocessing for merging operations"
+        "-p", "--parallel", action="store_true",
+        help=("Use multiprocessing for merging operations. "
               "DEFAULT False")
     )
     parser.add_argument(
-        "-p", "--n_of_process", type=int, default=4,
+        "-np", "--n_of_process", type=int, default=4,
         help="Number of processes to use. DEFAULT 4")
     parser.add_argument(
         "-cf", "--chunk-file", type=int, default=1024,
@@ -43,7 +50,8 @@ def cli_main():
     main(
         input_dir=args.input_dir,
         output_dir=args.output_dir,
-        multiprocessing=args.multiprocessing,
+        filename=args.filename,
+        use_parallel=args.parallel,
         n_of_process=args.n_of_process,
         chunk_file=args.chunk_file,
         chunk_line=args.chunk_line,
