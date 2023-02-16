@@ -2,16 +2,18 @@
 import argparse
 import os
 from .merger import FileMerger
+from .utils import check_valid_path
 
 
 def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_line: int,
          use_parallel: bool, n_of_process: int,) -> None:
+    input_dir = check_valid_path(input_dir)
     file_merger = FileMerger(input_dir, output_dir, filename, chunk_file,
                              chunk_line, use_parallel, n_of_process)
     file_merger.merge_files()
 
 
-def cli_main():
+def cli_main() -> None:
     """Command line interface"""
     parser = argparse.ArgumentParser(
         description=(

@@ -107,7 +107,10 @@ class FileMerger:
 
     def merge_files_parallel(self) -> int:
         """
-        Merges all input files into a single sorted output file.
+        Creates intermediate files using multiprocessing.
+
+        Returns:
+        - An integer representing the number of chunks the input files have been divided into.
         """
         chunks = self.divide_files_into_chunks()
 
@@ -126,7 +129,10 @@ class FileMerger:
 
     async def merge_files_async(self) -> int:
         """
-        Merges all input files into a single sorted output file.
+        Creates intermediate files using asyncio.
+
+        Returns:
+        - An integer representing the number of tasks created.
         """
         tasks = []
         for i in range(0, len(self.input_files), self.chunk_size_file):
@@ -141,7 +147,7 @@ class FileMerger:
 
     def merge_files(self) -> None:
         """
-        Merges all input files into a single sorted output file.
+        Merges all input files into a single sorted output file, either using multiprocessing or asyncio, depending on the configuration.
         """
         number_of_intermediate = 0
         if self.use_parallel:
