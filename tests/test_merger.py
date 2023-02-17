@@ -10,21 +10,23 @@ from unittest.mock import patch
 
 class TestFileMerger(unittest.TestCase):
 
-    def setUp(self):
-        self.input_dir = os.path.join(os.getcwd(), 'tests', 'data', 'input')
-        self.output_dir = os.path.join(
+    @classmethod
+    def setUpClass(cls):
+        cls.input_dir = os.path.join(os.getcwd(), 'tests', 'data', 'input')
+        cls.output_dir = os.path.join(
             os.getcwd(), 'tests', 'data', 'output')
-        self.filename = 'test_output.dat'
-        self.output_file = os.path.join(self.output_dir, self.filename)
-        self.chunk_size_file = 2
-        self.chunk_size_line = 2
-        self.file_merger = FileMerger(self.input_dir, self.output_dir, self.filename,
-                                      self.chunk_size_file, self.chunk_size_line)
-        self.chunks = self.file_merger.divide_files_into_chunks()
+        cls.filename = 'test_output.dat'
+        cls.output_file = os.path.join(cls.output_dir, cls.filename)
+        cls.chunk_size_file = 2
+        cls.chunk_size_line = 2
+        cls.file_merger = FileMerger(cls.input_dir, cls.output_dir, cls.filename,
+                                     cls.chunk_size_file, cls.chunk_size_line)
+        cls.chunks = cls.file_merger.divide_files_into_chunks()
 
-    def tearDown(self):
-        if os.path.exists(self.output_file):
-            os.remove(self.output_file)
+    @classmethod
+    def tearDownClass(cls):
+        if os.path.exists(cls.output_file):
+            os.remove(cls.output_file)
 
     def test_divide_files_into_chunks(self):
         # Test that files are correctly divided into chunks
@@ -53,18 +55,18 @@ class TestFileMerger(unittest.TestCase):
                 actual_output = f.readlines()
             self.assertEqual(len(actual_output), expected_output)
 
-    def test_merge_intermediate_files(self):
+    @patch.object(FileMerger, "create_intermediate")
+    def test_merge_intermediate_files(self, mock_create_intermediate):
+        mock_create_intermediate.return_value = None
         with tempfile.TemporaryDirectory() as tempdir:
-            with patch.object(self.file_merger, "create_intermediate") as mock_create_intermediate:
-                mock_create_intermediate.return_value = None
 
-                intermediate_files = [os.path.join(
-                    self.output_dir, f"{self.filename}.{i}") for i in range(2)]
-                for intermediate_file in intermediate_files:
-                    shutil.copy(intermediate_file, tempdir)
-                self.file_merger.output_file = os.path.join(
-                    tempdir, self.filename)
-                self.file_merger.merge_intermediate_files(2)
+            intermediate_files = [os.path.join(
+                self.output_dir, f"{self.filename}.{i}") for i in range(2)]
+            for intermediate_file in intermediate_files:
+                shutil.copy(intermediate_file, tempdir)
+            self.file_merger.output_file = os.path.join(
+                tempdir, self.filename)
+            self.file_merger.merge_intermediate_files(2)
 
             expected_content = [chr(i) for i in range(ord('a'), ord('l')+1)]
             # Check that intermediate files were merged and sorted
