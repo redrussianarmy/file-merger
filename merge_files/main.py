@@ -1,15 +1,21 @@
 """File Merger CLI Tool"""
 import argparse
 import os
-from .merger import FileMerger
+from .mergers.async_ import AsyncFileMerger
+from .mergers.parallel import ParallelFileMerger
 from .utils import check_valid_path
 
 
 def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_line: int,
          use_parallel: bool, n_of_process: int,) -> None:
+
     input_dir = check_valid_path(input_dir)
-    file_merger = FileMerger(input_dir, output_dir, filename, chunk_file,
-                             chunk_line, use_parallel, n_of_process)
+    if use_parallel:
+        file_merger = ParallelFileMerger(input_dir, output_dir, filename, chunk_file,
+                                         chunk_line, n_of_process)
+    else:
+        file_merger = AsyncFileMerger(input_dir, output_dir, filename, chunk_file,
+                                      chunk_line)
     file_merger.merge_files()
 
 

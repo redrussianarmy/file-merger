@@ -1,7 +1,5 @@
 import os
 import heapq
-import asyncio
-import multiprocessing
 import itertools
 from typing import List
 
@@ -20,16 +18,13 @@ class FileMerger:
         num_processes (int, optional): Number of processes to use. Defaults to 4.
     """
 
-    def __init__(self, input_dir: str, output_dir: str, filename: str = "output.txt", file_chunk_size: int = 1024, line_chunk_size: int = 1024,
-                 use_parallel: bool = False, num_processes: int = 4) -> None:
+    def __init__(self, input_dir: str, output_dir: str, filename: str = "output.txt", file_chunk_size: int = 1024, line_chunk_size: int = 1024) -> None:
         self.input_dir = input_dir
         self.output_file = os.path.join(output_dir, filename)
         self.chunk_size_file = file_chunk_size
         self.chunk_size_line = line_chunk_size
-        self.num_processes = num_processes
         self.input_files = [os.path.join(self.input_dir, f) for f in os.listdir(
             self.input_dir) if os.path.isfile(os.path.join(self.input_dir, f))]
-        self.use_parallel = use_parallel
 
     def divide_files_into_chunks(self) -> List[List[str]]:
         """
@@ -76,16 +71,6 @@ class FileMerger:
         for handle in input_handles:
             handle.close()
 
-    def merge_chunks_async(self, chunk: List[str], output_file: str) -> None:
-        """
-        Merges a subset of input files into an intermediate file using an async process.
-
-        Args:
-            chunk (list): List of input file paths.
-            output_file (str): Path and filename of intermediate output file.
-        """
-        asyncio.run(self.create_intermediate(chunk, output_file))
-
     def merge_intermediate_files(self, number_of_intermediate: int) -> None:
         written_words = set()
 
@@ -105,54 +90,5 @@ class FileMerger:
                 handle.close()
                 os.remove(handle.name)
 
-    def merge_files_parallel(self) -> int:
-        """
-        Creates intermediate files using multiprocessing.
-
-        Returns:
-        - An integer representing the number of chunks the input files have been divided into.
-        """
-        chunks = self.divide_files_into_chunks()
-
-        with multiprocessing.Pool(self.num_processes) as pool:
-            results = []
-            for i, chunk in enumerate(chunks):
-                output_file_chunk = f"{self.output_file}.{i}"
-                result = pool.apply_async(self.merge_chunks_async, args=(
-                    chunk, output_file_chunk))
-                results.append(result)
-
-            for result in results:
-                result.get()
-
-        return len(chunks)
-
-    async def merge_files_async(self) -> int:
-        """
-        Creates intermediate files using asyncio.
-
-        Returns:
-        - An integer representing the number of tasks created.
-        """
-        tasks = []
-        for i in range(0, len(self.input_files), self.chunk_size_file):
-            chunk = self.input_files[i:i+self.chunk_size_file]
-            output_file_chunk = f"{self.output_file}.{i//self.chunk_size_file}"
-            task = asyncio.create_task(self.create_intermediate(
-                chunk, output_file_chunk))
-            tasks.append(task)
-        await asyncio.gather(*tasks)
-
-        return len(tasks)
-
     def merge_files(self) -> None:
-        """
-        Merges all input files into a single sorted output file, either using multiprocessing or asyncio, depending on the configuration.
-        """
-        number_of_intermediate = 0
-        if self.use_parallel:
-            number_of_intermediate = self.merge_files_parallel()
-        else:
-            number_of_intermediate = asyncio.run(self.merge_files_async())
-
-        self.merge_intermediate_files(number_of_intermediate)
+        raise NotImplementedError("Subclasses should implement this method.")
