@@ -26,7 +26,7 @@ class FileMerger:
         self.input_files = [os.path.join(self.input_dir, f) for f in os.listdir(
             self.input_dir) if os.path.isfile(os.path.join(self.input_dir, f))]
 
-    def divide_files_into_chunks(self) -> List[List[str]]:
+    def _divide_files_into_chunks(self) -> List[List[str]]:
         """
         Divides input files into chunks for processing.
 
@@ -36,7 +36,7 @@ class FileMerger:
         return [self.input_files[i:i+self.chunk_size_file]
                 for i in range(0, len(self.input_files), self.chunk_size_file)]
 
-    async def create_intermediate(self, input_files: List[str], output_file: str) -> None:
+    async def _create_intermediate(self, input_files: List[str], output_file: str) -> None:
         """
         Asynchronously merges a subset of input files into a sorted intermediate file.
 
@@ -71,7 +71,7 @@ class FileMerger:
         for handle in input_handles:
             handle.close()
 
-    def merge_intermediate_files(self, number_of_intermediate: int) -> None:
+    def _merge_intermediate_files(self, number_of_intermediate: int) -> None:
         written_words = set()
 
         with open(self.output_file, "w") as output_handle:

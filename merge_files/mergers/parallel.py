@@ -11,7 +11,7 @@ class ParallelFileMerger(FileMerger):
         super().__init__(input_dir, output_dir, filename, file_chunk_size, line_chunk_size)
         self.num_processes = num_processes
 
-    async def merge_chunks_async(self, chunk: List[str], output_file: str) -> None:
+    async def _merge_chunks_async(self, chunk: List[str], output_file: str) -> None:
         """
         Merges a subset of input files into an intermediate file using an async process.
 
@@ -19,24 +19,29 @@ class ParallelFileMerger(FileMerger):
             chunk (list): List of input file paths.
             output_file (str): Path and filename of intermediate output file.
         """
-        loop = asyncio.get_event_loop()
-        await loop.create_task(self.create_intermediate(chunk, output_file))
+        await self._create_intermediate(chunk, output_file)
+
+    def _merge_chunks(self, chunk: List[str], output_file: str):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(self._merge_chunks_async(chunk, output_file))
+        loop.close()
 
     def merge_files(self) -> None:
         """
         Merges all input files into a single sorted output file using multiprocessing.
         """
-        chunks = self.divide_files_into_chunks()
+        chunks = self._divide_files_into_chunks()
 
         with multiprocessing.Pool(self.num_processes) as pool:
             results = []
             for i, chunk in enumerate(chunks):
                 output_file_chunk = f"{self.output_file}.{i}"
-                result = pool.apply_async(self.merge_chunks_async, args=(
+                result = pool.apply_async(self._merge_chunks, args=(
                     chunk, output_file_chunk))
                 results.append(result)
 
             for result in results:
                 result.get()
 
-        self.merge_intermediate_files(len(chunks))
+        self._merge_intermediate_files(len(chunks))

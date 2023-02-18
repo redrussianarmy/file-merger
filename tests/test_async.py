@@ -4,13 +4,18 @@ import glob
 import unittest
 from unittest.mock import (AsyncMock,
                            patch)
-
 from merge_files.mergers.async_ import AsyncFileMerger
 
 
 class TestAsyncFileMerger(unittest.TestCase):
+    """
+    A test suite for the AsyncFileMerger class
+    """
 
     def setUp(self):
+        """
+        Set up the test case by initializing test data and creating a file merger instance
+        """
         self.input_dir = os.path.join(os.getcwd(), 'tests', 'data', 'input')
         self.filename = 'test_output.dat'
         self.output_dir = os.path.join(os.getcwd(), 'tests', 'data', 'output')
@@ -19,14 +24,20 @@ class TestAsyncFileMerger(unittest.TestCase):
         self.chunk_size_line = 2
         self.file_merger = AsyncFileMerger(self.input_dir, self.output_dir, self.filename,
                                            self.chunk_size_file, self.chunk_size_line)
-        self.chunks = self.file_merger.divide_files_into_chunks()
+        self.chunks = self.file_merger._divide_files_into_chunks()
 
     def tearDown(self):
+        """
+        Clean up the test case by deleting the output file if it exists
+        """
         if os.path.exists(self.output_file):
             os.remove(self.output_file)
 
-    @patch.object(AsyncFileMerger, 'create_intermediate')
+    @patch.object(AsyncFileMerger, '_create_intermediate')
     def test_merge_files_async(self, mock_create_intermediate):
+        """
+        Test that files are merged asynchronously and intermediate files are created
+        """
         # Mock the coroutine so that it immediately returns
         mock_create_intermediate.coro.return_value = None
 
@@ -35,7 +46,7 @@ class TestAsyncFileMerger(unittest.TestCase):
 
         # Call merge_files_async
         _ = loop.run_until_complete(
-            self.file_merger.merge_files_async())
+            self.file_merger._merge_files_async())
 
         file_extension = "*.dat"  # or "*.*" for all files
 
@@ -61,9 +72,12 @@ class TestAsyncFileMerger(unittest.TestCase):
         ]
         self.assertCountEqual(simplified_calls, expected_calls)
 
-    @patch.object(AsyncFileMerger, 'merge_files_async', new_callable=AsyncMock)
-    @patch.object(AsyncFileMerger, 'merge_intermediate_files')
+    @patch.object(AsyncFileMerger, '_merge_files_async', new_callable=AsyncMock)
+    @patch.object(AsyncFileMerger, '_merge_intermediate_files')
     def test_merge_files(self, mock_merge_intermediate_files, mock_merge_files_async):
+        """
+        Test that files are merged and intermediate files are merged with the expected argument
+        """
         mock_merge_files_async.return_value = 2
 
         # Call merge_files

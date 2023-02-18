@@ -6,6 +6,9 @@ import zipfile
 def check_valid_path(path: str) -> str:
     """Return if the input path is a folder, if it is a compressed file,
         extract the folder inside and return its path"""
+    if not path:
+        raise ValueError(
+            f"Path cannot be None. Please enter a valid path: {path}")
     if os.path.isdir(path):
         return path
 

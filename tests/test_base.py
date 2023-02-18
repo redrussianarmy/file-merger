@@ -4,14 +4,19 @@ import unittest
 import asyncio
 import shutil
 
-from merge_files.mergers.base import FileMerger
 from unittest.mock import patch
+from merge_files.mergers.base import FileMerger
 
 
 class TestFileMerger(unittest.TestCase):
-
+    """
+    A unittest class for testing the FileMerger class.
+    """
     @classmethod
     def setUpClass(cls):
+        """
+        Set up the class variables for the test.
+        """
         cls.input_dir = os.path.join(os.getcwd(), 'tests', 'data', 'input')
         cls.output_dir = os.path.join(
             os.getcwd(), 'tests', 'data', 'output')
@@ -21,15 +26,20 @@ class TestFileMerger(unittest.TestCase):
         cls.chunk_size_line = 2
         cls.file_merger = FileMerger(cls.input_dir, cls.output_dir, cls.filename,
                                      cls.chunk_size_file, cls.chunk_size_line)
-        cls.chunks = cls.file_merger.divide_files_into_chunks()
+        cls.chunks = cls.file_merger._divide_files_into_chunks()
 
     @classmethod
     def tearDownClass(cls):
+        """
+        Clean up the output file after the test.
+        """
         if os.path.exists(cls.output_file):
             os.remove(cls.output_file)
 
     def test_divide_files_into_chunks(self):
-        # Test that files are correctly divided into chunks
+        """
+        Test that files are correctly divided into chunks.
+        """
         expected_chunks = [[os.path.join(self.input_dir, 'file1.dat'),
                             os.path.join(self.input_dir, 'file2.dat')],
                            [os.path.join(self.input_dir, 'file3.dat'),
@@ -38,7 +48,9 @@ class TestFileMerger(unittest.TestCase):
         self.assertSequenceEqual(self.chunks, expected_chunks)
 
     def test_create_intermediate(self):
-        # Test that intermediate files are correctly created and written
+        """
+        Test that intermediate files are correctly created and written.
+        """
         input_files = self.chunks[0]
         expected_output = 0
         for input_file in input_files:
@@ -50,13 +62,16 @@ class TestFileMerger(unittest.TestCase):
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             loop.run_until_complete(
-                self.file_merger.create_intermediate(input_files, output_file))
+                self.file_merger._create_intermediate(input_files, output_file))
             with open(output_file, 'r') as f:
                 actual_output = f.readlines()
             self.assertEqual(len(actual_output), expected_output)
 
-    @patch.object(FileMerger, "create_intermediate")
+    @patch.object(FileMerger, "_create_intermediate")
     def test_merge_intermediate_files(self, mock_create_intermediate):
+        """
+        Test that intermediate files are merged and sorted correctly.
+        """
         mock_create_intermediate.return_value = None
         with tempfile.TemporaryDirectory() as tempdir:
 
@@ -66,7 +81,7 @@ class TestFileMerger(unittest.TestCase):
                 shutil.copy(intermediate_file, tempdir)
             self.file_merger.output_file = os.path.join(
                 tempdir, self.filename)
-            self.file_merger.merge_intermediate_files(2)
+            self.file_merger._merge_intermediate_files(2)
 
             expected_content = [chr(i) for i in range(ord('a'), ord('l')+1)]
             # Check that intermediate files were merged and sorted
@@ -75,6 +90,9 @@ class TestFileMerger(unittest.TestCase):
                 self.assertEqual(lines, expected_content)
 
     def test_merge_files_raises_not_implemented_error(self):
+        """
+        Test that merge_files() raises a NotImplementedError.
+        """
         with self.assertRaises(NotImplementedError):
             self.file_merger.merge_files()
 
