@@ -11,7 +11,7 @@ class ParallelFileMerger(FileMerger):
         super().__init__(input_dir, output_dir, filename, file_chunk_size, line_chunk_size)
         self.num_processes = num_processes
 
-    def merge_chunks_async(self, chunk: List[str], output_file: str) -> None:
+    async def merge_chunks_async(self, chunk: List[str], output_file: str) -> None:
         """
         Merges a subset of input files into an intermediate file using an async process.
 
@@ -19,7 +19,8 @@ class ParallelFileMerger(FileMerger):
             chunk (list): List of input file paths.
             output_file (str): Path and filename of intermediate output file.
         """
-        asyncio.run(self.create_intermediate(chunk, output_file))
+        loop = asyncio.get_event_loop()
+        await loop.create_task(self.create_intermediate(chunk, output_file))
 
     def merge_files(self) -> None:
         """
