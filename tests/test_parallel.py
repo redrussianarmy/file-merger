@@ -78,7 +78,7 @@ class TestParallelFileMerger(unittest.TestCase):
         # Check that apply_async was called for each chunk
         expected_calls = [
             call(self.file_merger._merge_chunks,
-                 args=(chunk, f"{self.output_file}.{i}"))
+                 args=(chunk, f"{self.file_merger.temp_file}.{i}"))
             for i, chunk in enumerate(self.chunks)
         ]
 
@@ -87,7 +87,7 @@ class TestParallelFileMerger(unittest.TestCase):
 
         # Check that merge_intermediate_files was called with the correct argument
         self.file_merger._merge_intermediate_files.assert_called_once_with(
-            len(self.chunks))
+            len(self.chunks), os.path.join(self.file_merger.temp_file))
 
     @patch('multiprocessing.Pool')
     def test_merge_files_with_fewer_processes(self, mock_pool):

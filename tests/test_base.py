@@ -79,9 +79,9 @@ class TestFileMerger(unittest.TestCase):
                 self.output_dir, f"{self.filename}.{i}") for i in range(2)]
             for intermediate_file in intermediate_files:
                 shutil.copy(intermediate_file, tempdir)
-            self.file_merger.output_file = os.path.join(
-                tempdir, self.filename)
-            self.file_merger._merge_intermediate_files(2)
+            temp_file = os.path.join(tempdir, self.filename)
+            self.file_merger.output_file = temp_file
+            self.file_merger._merge_intermediate_files(2, temp_file)
 
             expected_content = [chr(i) for i in range(ord('a'), ord('l')+1)]
             # Check that intermediate files were merged and sorted

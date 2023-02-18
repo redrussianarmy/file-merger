@@ -1,4 +1,5 @@
 import asyncio
+import shutil
 
 from .base import FileMerger
 
@@ -14,7 +15,7 @@ class AsyncFileMerger(FileMerger):
         tasks = []
         for i in range(0, len(self.input_files), self.chunk_size_file):
             chunk = self.input_files[i:i+self.chunk_size_file]
-            output_file_chunk = f"{self.output_file}.{i//self.chunk_size_file}"
+            output_file_chunk = f"{self.temp_file}.{i//self.chunk_size_file}"
             task = asyncio.create_task(self._create_intermediate(
                 chunk, output_file_chunk))
             tasks.append(task)
@@ -26,6 +27,10 @@ class AsyncFileMerger(FileMerger):
         """
         Merges all input files into a single sorted output file using asyncio.
         """
-        number_of_intermediate = asyncio.run(self._merge_files_async())
-
-        self._merge_intermediate_files(number_of_intermediate)
+        try:
+            number_of_intermediate = asyncio.run(
+                self._merge_files_async())
+            self._merge_intermediate_files(
+                number_of_intermediate, self.temp_file)
+        finally:
+            shutil.rmtree(self.temp_dir)

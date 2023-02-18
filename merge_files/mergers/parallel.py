@@ -1,5 +1,6 @@
 import asyncio
 import multiprocessing
+import shutil
 from typing import List
 
 from .base import FileMerger
@@ -33,15 +34,18 @@ class ParallelFileMerger(FileMerger):
         """
         chunks = self._divide_files_into_chunks()
 
-        with multiprocessing.Pool(self.num_processes) as pool:
-            results = []
-            for i, chunk in enumerate(chunks):
-                output_file_chunk = f"{self.output_file}.{i}"
-                result = pool.apply_async(self._merge_chunks, args=(
-                    chunk, output_file_chunk))
-                results.append(result)
+        try:
+            with multiprocessing.Pool(self.num_processes) as pool:
+                results = []
+                for i, chunk in enumerate(chunks):
+                    output_file_chunk = f"{self.temp_file}.{i}"
+                    result = pool.apply_async(self._merge_chunks, args=(
+                        chunk, output_file_chunk))
+                    results.append(result)
 
-            for result in results:
-                result.get()
+                for result in results:
+                    result.get()
 
-        self._merge_intermediate_files(len(chunks))
+            self._merge_intermediate_files(len(chunks), self.temp_file)
+        finally:
+            shutil.rmtree(self.temp_dir)

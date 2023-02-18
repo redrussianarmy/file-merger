@@ -1,6 +1,7 @@
 import os
 import heapq
 import itertools
+import tempfile
 from typing import List
 
 
@@ -20,7 +21,11 @@ class FileMerger:
 
     def __init__(self, input_dir: str, output_dir: str, filename: str = "output.txt", file_chunk_size: int = 1024, line_chunk_size: int = 1024) -> None:
         self.input_dir = input_dir
-        self.output_file = os.path.join(output_dir, filename)
+        self.output_dir = output_dir
+        self.filename = filename
+        self.temp_dir = tempfile.mkdtemp()
+        self.temp_file = os.path.join(self.temp_dir, self.filename)
+        self.output_file = os.path.join(self.output_dir, self.filename)
         self.chunk_size_file = file_chunk_size
         self.chunk_size_line = line_chunk_size
         self.input_files = [os.path.join(self.input_dir, f) for f in os.listdir(
@@ -71,11 +76,18 @@ class FileMerger:
         for handle in input_handles:
             handle.close()
 
-    def _merge_intermediate_files(self, number_of_intermediate: int) -> None:
+    def _merge_intermediate_files(self, number_of_intermediate: int, temp_file: str) -> None:
+        """
+        Merges the intermediate files into the final output file.
+
+        Args:
+            num_files (int): Number of intermediate files to merge.
+            temp_file (str): A temp file in the path of temporary directory containing intermediate files.
+        """
         written_words = set()
 
         with open(self.output_file, "w") as output_handle:
-            input_handles = [open(f"{self.output_file}.{i}", "r")
+            input_handles = [open(f"{temp_file}.{i}", "r")
                              for i in range(number_of_intermediate)]
             input_iters = [iter(handle) for handle in input_handles]
             sorted_lines = sorted(heapq.merge(

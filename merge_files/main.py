@@ -16,7 +16,13 @@ def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_
     else:
         file_merger = AsyncFileMerger(input_dir, output_dir, filename, chunk_file,
                                       chunk_line)
-    file_merger.merge_files()
+    try:
+        file_merger.merge_files()
+    except Exception as e:
+        print("Something went wrong:", e)
+    else:
+        print("Operation is successful. The output file has been saved here:",
+              os.path.join(output_dir, filename))
 
 
 def cli_main() -> None:

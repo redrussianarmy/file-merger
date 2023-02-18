@@ -87,7 +87,8 @@ class TestAsyncFileMerger(unittest.TestCase):
         mock_merge_files_async.assert_awaited_once()
 
         # Check that merge_intermediate_files was called with the expected argument
-        mock_merge_intermediate_files.assert_called_once_with(2)
+        mock_merge_intermediate_files.assert_called_once_with(
+            2, self.file_merger.temp_file)
 
 
 if __name__ == '__main__':
