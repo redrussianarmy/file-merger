@@ -4,18 +4,25 @@ import os
 import time
 from .mergers.async_ import AsyncFileMerger
 from .mergers.parallel import ParallelFileMerger
-from .utils import check_valid_path
+from .mergers.basic import BasicFileMerger
+from .utils import (check_valid_path,
+                    list_files)
 
 
 def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_line: int,
          use_parallel: bool, n_of_process: int,) -> None:
 
     input_dir = check_valid_path(input_dir)
-    if use_parallel:
-        file_merger = ParallelFileMerger(input_dir, output_dir, filename, chunk_file,
-                                         chunk_line, n_of_process)
+    input_files = list_files(input_dir)
+    if chunk_file < len(input_files):
+        if use_parallel:
+            file_merger = ParallelFileMerger(input_files, output_dir, filename, chunk_file,
+                                             chunk_line, n_of_process)
+        else:
+            file_merger = AsyncFileMerger(input_files, output_dir, filename, chunk_file,
+                                          chunk_line)
     else:
-        file_merger = AsyncFileMerger(input_dir, output_dir, filename, chunk_file,
+        file_merger = BasicFileMerger(input_files, output_dir, filename, chunk_file,
                                       chunk_line)
     try:
         tic = time.time()

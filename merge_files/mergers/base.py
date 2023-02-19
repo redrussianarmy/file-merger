@@ -10,7 +10,7 @@ class FileMerger:
     Class for merging multiple text files into a single, sorted output file.
 
     Args:
-        input_dir (str): Directory containing input files.
+        input_files (List[str]): List of paths to input files.
         output_dir (str): Path of output file.
         filename (str, optional): Name of output file. Defaults to output.txt
         file_chunk_size (int, optional): Number of files to process at once. Defaults to 1024.
@@ -19,9 +19,9 @@ class FileMerger:
         num_processes (int, optional): Number of processes to use. Defaults to 4.
     """
 
-    def __init__(self, input_dir: str, output_dir: str, filename: str = "output.txt",
+    def __init__(self, input_files: List[str], output_dir: str, filename: str = "output.txt",
                  file_chunk_size: int = 1024, line_chunk_size: int = 1024) -> None:
-        self.input_dir = input_dir
+        self.input_files = input_files
         self.output_dir = output_dir
         self.filename = filename
         self.temp_dir = tempfile.mkdtemp()
@@ -29,8 +29,6 @@ class FileMerger:
         self.output_file = os.path.join(self.output_dir, self.filename)
         self.chunk_size_file = file_chunk_size
         self.chunk_size_line = line_chunk_size
-        self.input_files = [os.path.join(self.input_dir, f) for f in os.listdir(
-            self.input_dir) if os.path.isfile(os.path.join(self.input_dir, f))]
 
     def _divide_files_into_chunks(self) -> List[List[str]]:
         """

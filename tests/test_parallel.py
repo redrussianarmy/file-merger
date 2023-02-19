@@ -6,6 +6,7 @@ from unittest.mock import (AsyncMock,
                            patch,
                            call)
 from merge_files.mergers.parallel import ParallelFileMerger
+from merge_files.utils import list_files
 
 
 class TestParallelFileMerger(unittest.TestCase):
@@ -18,13 +19,14 @@ class TestParallelFileMerger(unittest.TestCase):
         Set up the test environment by initializing the necessary variables.
         """
         self.input_dir = os.path.join(os.getcwd(), 'tests', 'data', 'input')
+        self.input_list = list_files(self.input_dir)
         self.filename = 'test_output.dat'
         self.output_dir = os.path.join(os.getcwd(), 'tests', 'data', 'output')
         self.output_file = os.path.join(self.output_dir, self.filename)
         self.chunk_size_file = 3
         self.chunk_size_line = 2
         self.num_processes = 2
-        self.file_merger = ParallelFileMerger(self.input_dir, self.output_dir, self.filename,
+        self.file_merger = ParallelFileMerger(self.input_list, self.output_dir, self.filename,
                                               self.chunk_size_file, self.chunk_size_line, self.num_processes)
         self.chunks = self.file_merger._divide_files_into_chunks()
 
@@ -90,30 +92,6 @@ class TestParallelFileMerger(unittest.TestCase):
         # Check that merge_intermediate_files was called with the correct argument
         self.file_merger._merge_intermediate_files.assert_called_once_with(
             intermediate_files, delete=True)
-
-    @patch('multiprocessing.Pool')
-    def test_merge_files_wout_chunks(self, mock_pool):
-        """
-        Test the merge_files() method of ParallelFileMerger with multiple processes.
-        """
-        # Create a Mock object for apply_async
-        mock_apply_async = Mock()
-        mock_apply_async.return_value.get.return_value = None
-        mock_pool.return_value.__enter__.return_value.apply_async = mock_apply_async
-
-        # Mock the merge_intermediate_files method
-        self.file_merger._merge_intermediate_files = Mock()
-
-        self.file_merger.chunk_size_file = len(self.file_merger.input_files) + 1
-        # Call merge_files
-        self.file_merger.merge_files()
-
-        # Check apply_async is not called
-        mock_apply_async.assert_not_called()
-
-        # Check that merge_intermediate_files was called with the correct argument
-        self.file_merger._merge_intermediate_files.assert_called_once_with(
-            self.file_merger.input_files)
 
     @patch('multiprocessing.Pool')
     def test_merge_files_with_fewer_processes(self, mock_pool):

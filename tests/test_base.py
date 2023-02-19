@@ -6,6 +6,7 @@ import shutil
 
 from unittest.mock import patch
 from merge_files.mergers.base import FileMerger
+from merge_files.utils import list_files
 
 
 class TestFileMerger(unittest.TestCase):
@@ -18,13 +19,14 @@ class TestFileMerger(unittest.TestCase):
         Set up the class variables for the test.
         """
         cls.input_dir = os.path.join(os.getcwd(), 'tests', 'data', 'input')
+        cls.input_list = list_files(cls.input_dir)
         cls.output_dir = os.path.join(
             os.getcwd(), 'tests', 'data', 'output')
         cls.filename = 'test_output.dat'
         cls.output_file = os.path.join(cls.output_dir, cls.filename)
         cls.chunk_size_file = 2
         cls.chunk_size_line = 2
-        cls.file_merger = FileMerger(cls.input_dir, cls.output_dir, cls.filename,
+        cls.file_merger = FileMerger(cls.input_list, cls.output_dir, cls.filename,
                                      cls.chunk_size_file, cls.chunk_size_line)
         cls.chunks = cls.file_merger._divide_files_into_chunks()
 

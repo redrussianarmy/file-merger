@@ -28,11 +28,8 @@ class AsyncFileMerger(FileMerger):
         """
         Merges all input files into a single sorted output file using asyncio.
         """
-        if self.chunk_size_file < len(self.input_files):
-            try:
-                chunks = asyncio.run(self._split_into_files())
-                self._merge_intermediate_files(chunks, delete=True)
-            finally:
-                shutil.rmtree(self.temp_dir)
-        else:
-            self._merge_intermediate_files(self.input_files)
+        try:
+            chunks = asyncio.run(self._split_into_files())
+            self._merge_intermediate_files(chunks, delete=True)
+        finally:
+            shutil.rmtree(self.temp_dir)
