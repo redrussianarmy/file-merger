@@ -210,7 +210,7 @@ writing manifest file 'filemerger.egg-info\SOURCES.txt'
 running build_ext
 test_merge_files (tests.test_async.TestAsyncFileMerger)
 Test that files are merged and intermediate files are merged with the expected argument ... ok
-test_merge_files_async (tests.test_async.TestAsyncFileMerger)
+test_split_into_files (tests.test_async.TestAsyncFileMerger)
 Test that files are merged asynchronously and intermediate files are created ... ok
 test_create_intermediate (tests.test_base.TestFileMerger)
 Test that intermediate files are correctly created and written. ... ok
@@ -220,10 +220,10 @@ test_merge_files_raises_not_implemented_error (tests.test_base.TestFileMerger)
 Test that merge_files() raises a NotImplementedError. ... ok
 test_merge_intermediate_files (tests.test_base.TestFileMerger)
 Test that intermediate files are merged and sorted correctly. ... ok
-test_merge_chunks (tests.test_parallel.TestParallelFileMerger)
-Test the _merge_chunks() method of ParallelFileMerger. ... ok
-test_merge_chunks_async (tests.test_parallel.TestParallelFileMerger)
-Test the _merge_chunks_async() method of ParallelFileMerger. ... ok
+test_split_into_files (tests.test_parallel.TestParallelFileMerger)
+Test the _split_into_files() method of ParallelFileMerger. ... ok
+test_split_into_files_async (tests.test_parallel.TestParallelFileMerger)
+Test the _split_into_files() method of ParallelFileMerger. ... ok
 test_merge_files (tests.test_parallel.TestParallelFileMerger)
 Test the merge_files() method of ParallelFileMerger with multiple processes. ... ok
 test_merge_files_with_fewer_processes (tests.test_parallel.TestParallelFileMerger)

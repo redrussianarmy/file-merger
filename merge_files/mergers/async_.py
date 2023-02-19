@@ -5,7 +5,7 @@ from .base import FileMerger
 
 
 class AsyncFileMerger(FileMerger):
-    async def _merge_files_async(self) -> int:
+    async def _split_into_files(self) -> int:
         """
         Creates intermediate files using asyncio.
 
@@ -27,7 +27,7 @@ class AsyncFileMerger(FileMerger):
         Merges all input files into a single sorted output file using asyncio.
         """
         try:
-            number_of_intermediate = asyncio.run(self._merge_files_async())
+            number_of_intermediate = asyncio.run(self._split_into_files())
             self._merge_intermediate_files(number_of_intermediate, self.temp_file)
         finally:
             shutil.rmtree(self.temp_dir)

@@ -12,7 +12,7 @@ class ParallelFileMerger(FileMerger):
         super().__init__(input_dir, output_dir, filename, file_chunk_size, line_chunk_size)
         self.num_processes = num_processes
 
-    async def _merge_chunks_async(self, chunk: List[str], output_file: str) -> None:
+    async def _split_into_files_async(self, chunk: List[str], output_file: str) -> None:
         """
         Merges a subset of input files into an intermediate file using an async process.
 
@@ -22,10 +22,10 @@ class ParallelFileMerger(FileMerger):
         """
         await self._create_intermediate(chunk, output_file)
 
-    def _merge_chunks(self, chunk: List[str], output_file: str):
+    def _split_into_files(self, chunk: List[str], output_file: str):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        loop.run_until_complete(self._merge_chunks_async(chunk, output_file))
+        loop.run_until_complete(self._split_into_files_async(chunk, output_file))
         loop.close()
 
     def merge_files(self) -> None:
@@ -39,7 +39,8 @@ class ParallelFileMerger(FileMerger):
                 results = []
                 for i, chunk in enumerate(chunks):
                     output_file_chunk = f"{self.temp_file}.{i}"
-                    result = pool.apply_async(self._merge_chunks, args=(chunk, output_file_chunk))
+                    result = pool.apply_async(self._split_into_files,
+                                              args=(chunk, output_file_chunk))
                     results.append(result)
 
                 for result in results:

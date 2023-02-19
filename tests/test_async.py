@@ -34,7 +34,7 @@ class TestAsyncFileMerger(unittest.TestCase):
             os.remove(self.output_file)
 
     @patch.object(AsyncFileMerger, '_create_intermediate')
-    def test_merge_files_async(self, mock_create_intermediate):
+    def test_split_into_files(self, mock_create_intermediate):
         """
         Test that files are merged asynchronously and intermediate files are created
         """
@@ -45,7 +45,7 @@ class TestAsyncFileMerger(unittest.TestCase):
         asyncio.set_event_loop(loop)
 
         # Call merge_files_async
-        _ = loop.run_until_complete(self.file_merger._merge_files_async())
+        _ = loop.run_until_complete(self.file_merger._split_into_files())
 
         file_extension = "*.dat"  # or "*.*" for all files
 
@@ -68,19 +68,19 @@ class TestAsyncFileMerger(unittest.TestCase):
         ]
         self.assertCountEqual(simplified_calls, expected_calls)
 
-    @patch.object(AsyncFileMerger, '_merge_files_async', new_callable=AsyncMock)
+    @patch.object(AsyncFileMerger, '_split_into_files', new_callable=AsyncMock)
     @patch.object(AsyncFileMerger, '_merge_intermediate_files')
-    def test_merge_files(self, mock_merge_intermediate_files, mock_merge_files_async):
+    def test_merge_files(self, mock_merge_intermediate_files, mock_split_into_files):
         """
         Test that files are merged and intermediate files are merged with the expected argument
         """
-        mock_merge_files_async.return_value = 2
+        mock_split_into_files.return_value = 2
 
         # Call merge_files
         self.file_merger.merge_files()
 
         # Assert that merge_files_async was called
-        mock_merge_files_async.assert_awaited_once()
+        mock_split_into_files.assert_awaited_once()
 
         # Check that merge_intermediate_files was called with the expected argument
         mock_merge_intermediate_files.assert_called_once_with(

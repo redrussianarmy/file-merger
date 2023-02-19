@@ -35,26 +35,26 @@ class TestParallelFileMerger(unittest.TestCase):
         if os.path.exists(self.output_file):
             os.remove(self.output_file)
 
-    def test_merge_chunks(self):
+    def test_split_into_files(self):
         """
-        Test the _merge_chunks() method of ParallelFileMerger.
+        Test the _split_into_files() method of ParallelFileMerger.
         """
         chunk = ['file1.txt', 'file2.txt']
         output_file = 'output.txt'
 
-        with patch.object(ParallelFileMerger, '_merge_chunks_async', AsyncMock()) as merge_chunks_async_mock:
-            self.file_merger._merge_chunks(chunk, output_file)
+        with patch.object(ParallelFileMerger, '_split_into_files_async', AsyncMock()) as merge_chunks_async_mock:
+            self.file_merger._split_into_files(chunk, output_file)
 
         merge_chunks_async_mock.assert_called_once_with(chunk, output_file)
 
-    def test_merge_chunks_async(self):
+    def test_split_into_files_async(self):
         """
-        Test the _merge_chunks_async() method of ParallelFileMerger.
+        Test the _split_into_files_async() method of ParallelFileMerger.
         """
         chunk = ["file1.txt", "file2.txt"]
         output_file = "output.txt"
         with patch.object(ParallelFileMerger, '_create_intermediate') as mock_create_intermediate:
-            asyncio.run(self.file_merger._merge_chunks_async(chunk, output_file))
+            asyncio.run(self.file_merger._split_into_files_async(chunk, output_file))
             mock_create_intermediate.assert_called_once_with(chunk, output_file)
 
     @patch('multiprocessing.Pool')
@@ -75,7 +75,7 @@ class TestParallelFileMerger(unittest.TestCase):
 
         # Check that apply_async was called for each chunk
         expected_calls = [
-            call(self.file_merger._merge_chunks,
+            call(self.file_merger._split_into_files,
                  args=(chunk, f"{self.file_merger.temp_file}.{i}"))
             for i, chunk in enumerate(self.chunks)
         ]
