@@ -78,15 +78,22 @@ class TestFileMerger(unittest.TestCase):
                 self.output_dir, f"{self.filename}.{i}") for i in range(2)]
             for intermediate_file in intermediate_files:
                 shutil.copy(intermediate_file, tempdir)
+            temp_int_filenames = os.listdir(tempdir)
+            temp_int_files = [os.path.join(tempdir, file_name) for file_name in temp_int_filenames]
             temp_file = os.path.join(tempdir, self.filename)
             self.file_merger.output_file = temp_file
-            self.file_merger._merge_intermediate_files(2, temp_file)
+            self.file_merger._merge_intermediate_files(temp_int_files, delete=True)
 
             expected_content = [chr(i) for i in range(ord('a'), ord('l')+1)]
+
             # Check that intermediate files were merged and sorted
             with open(self.file_merger.output_file, "r") as f:
                 lines = [line.rstrip('\n') for line in f.readlines()]
                 self.assertEqual(lines, expected_content)
+
+            # Check that temporary intermediate files have been deleted
+            for file_path in temp_int_files:
+                self.assertFalse(os.path.exists(file_path))
 
     def test_merge_files_raises_not_implemented_error(self):
         """

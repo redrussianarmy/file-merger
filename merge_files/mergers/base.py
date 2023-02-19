@@ -73,21 +73,23 @@ class FileMerger:
                 for word in sorted_chunk:
                     output_handle.write(word)
 
+        print(f"Created intermediate file in {output_file}")
         for handle in input_handles:
             handle.close()
 
-    def _merge_intermediate_files(self, number_of_intermediate: int, temp_file: str) -> None:
+    def _merge_intermediate_files(self, file_paths: List[str], delete: bool = False) -> None:
         """
         Merges the intermediate files into the final output file.
 
         Args:
-            num_files (int): Number of intermediate files to merge.
-            temp_file (str): A temp file in the path of temporary directory containing intermediate files.
+            file_paths (List[str]): A list of file paths to merge.
+            delete (bool): Whether delete files in file_paths or not
         """
         written_words = set()
 
+        print(f"Started to merge intermediate files")
         with open(self.output_file, "w") as output_handle:
-            input_handles = [open(f"{temp_file}.{i}", "r") for i in range(number_of_intermediate)]
+            input_handles = [open(file_path, "r") for file_path in file_paths]
             input_iters = [iter(handle) for handle in input_handles]
             sorted_lines = sorted(heapq.merge(*input_iters, key=lambda x: x.strip()))
             for word in sorted_lines:
@@ -98,7 +100,8 @@ class FileMerger:
 
             for handle in input_handles:
                 handle.close()
-                os.remove(handle.name)
+                if delete:
+                    os.remove(handle.name)
 
     def merge_files(self) -> None:
         raise NotImplementedError("Subclasses should implement this method.")

@@ -32,20 +32,24 @@ class ParallelFileMerger(FileMerger):
         """
         Merges all input files into a single sorted output file using multiprocessing.
         """
-        chunks = self._divide_files_into_chunks()
+        if self.chunk_size_file < len(self.input_files):
+            chunks = self._divide_files_into_chunks()
+            output_chunks = []
+            try:
+                with multiprocessing.Pool(self.num_processes) as pool:
+                    results = []
+                    for i, chunk in enumerate(chunks):
+                        output_file_chunk = f"{self.temp_file}.{i}"
+                        output_chunks.append(output_file_chunk)
+                        result = pool.apply_async(self._split_into_files,
+                                                  args=(chunk, output_file_chunk))
+                        results.append(result)
 
-        try:
-            with multiprocessing.Pool(self.num_processes) as pool:
-                results = []
-                for i, chunk in enumerate(chunks):
-                    output_file_chunk = f"{self.temp_file}.{i}"
-                    result = pool.apply_async(self._split_into_files,
-                                              args=(chunk, output_file_chunk))
-                    results.append(result)
+                    for result in results:
+                        result.get()
 
-                for result in results:
-                    result.get()
-
-            self._merge_intermediate_files(len(chunks), self.temp_file)
-        finally:
-            shutil.rmtree(self.temp_dir)
+                self._merge_intermediate_files(output_chunks, delete=True)
+            finally:
+                shutil.rmtree(self.temp_dir)
+        else:
+            self._merge_intermediate_files(self.input_files)
