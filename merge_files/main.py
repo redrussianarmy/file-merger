@@ -1,6 +1,7 @@
 """File Merger CLI Tool"""
 import argparse
 import os
+import time
 from .mergers.async_ import AsyncFileMerger
 from .mergers.parallel import ParallelFileMerger
 from .utils import check_valid_path
@@ -17,7 +18,10 @@ def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_
         file_merger = AsyncFileMerger(input_dir, output_dir, filename, chunk_file,
                                       chunk_line)
     try:
+        tic = time.time()
         file_merger.merge_files()
+        tac = time.time()
+        print("Elapsed time:", (tac-tic), "ms")
     except Exception as e:
         print("Something went wrong:", e)
     else:

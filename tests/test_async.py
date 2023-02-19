@@ -45,8 +45,7 @@ class TestAsyncFileMerger(unittest.TestCase):
         asyncio.set_event_loop(loop)
 
         # Call merge_files_async
-        _ = loop.run_until_complete(
-            self.file_merger._merge_files_async())
+        _ = loop.run_until_complete(self.file_merger._merge_files_async())
 
         file_extension = "*.dat"  # or "*.*" for all files
 
@@ -56,14 +55,11 @@ class TestAsyncFileMerger(unittest.TestCase):
         # Count the number of files
         num_files = len(files)
         # Check that create_intermediate was called the expected number of times
-        expected_num_calls = (
-            num_files + self.chunk_size_file - 1) // self.chunk_size_file
-        self.assertEqual(
-            mock_create_intermediate.call_count, expected_num_calls)
+        expected_num_calls = (num_files + self.chunk_size_file - 1) // self.chunk_size_file
+        self.assertEqual(mock_create_intermediate.call_count, expected_num_calls)
 
         # Check that create_intermediate was called with the expected arguments
-        calls = [call[0]
-                 for call in mock_create_intermediate.call_args_list]
+        calls = [call[0] for call in mock_create_intermediate.call_args_list]
         simplified_calls = [([os.path.basename(f) for f in file_list], os.path.basename(
             output_file)) for (file_list, output_file) in calls]
         expected_calls = [

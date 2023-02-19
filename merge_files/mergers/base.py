@@ -19,7 +19,8 @@ class FileMerger:
         num_processes (int, optional): Number of processes to use. Defaults to 4.
     """
 
-    def __init__(self, input_dir: str, output_dir: str, filename: str = "output.txt", file_chunk_size: int = 1024, line_chunk_size: int = 1024) -> None:
+    def __init__(self, input_dir: str, output_dir: str, filename: str = "output.txt",
+                 file_chunk_size: int = 1024, line_chunk_size: int = 1024) -> None:
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.filename = filename
@@ -66,8 +67,7 @@ class FileMerger:
                     break
 
                 # Merge sorted chunks of words
-                sorted_chunk = sorted(heapq.merge(*chunks),
-                                      key=lambda x: x.strip())
+                sorted_chunk = sorted(heapq.merge(*chunks), key=lambda x: x.strip())
 
                 # Write merged chunk of words to output file
                 for word in sorted_chunk:
@@ -87,11 +87,9 @@ class FileMerger:
         written_words = set()
 
         with open(self.output_file, "w") as output_handle:
-            input_handles = [open(f"{temp_file}.{i}", "r")
-                             for i in range(number_of_intermediate)]
+            input_handles = [open(f"{temp_file}.{i}", "r") for i in range(number_of_intermediate)]
             input_iters = [iter(handle) for handle in input_handles]
-            sorted_lines = sorted(heapq.merge(
-                *input_iters, key=lambda x: x.strip()))
+            sorted_lines = sorted(heapq.merge(*input_iters, key=lambda x: x.strip()))
             for word in sorted_lines:
                 word = word.strip()
                 if word not in written_words:

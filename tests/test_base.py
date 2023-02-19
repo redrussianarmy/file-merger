@@ -61,8 +61,7 @@ class TestFileMerger(unittest.TestCase):
             output_file = os.path.join(tempdir, 'test_output.dat.0')
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            loop.run_until_complete(
-                self.file_merger._create_intermediate(input_files, output_file))
+            loop.run_until_complete(self.file_merger._create_intermediate(input_files, output_file))
             with open(output_file, 'r') as f:
                 actual_output = f.readlines()
             self.assertEqual(len(actual_output), expected_output)

@@ -39,8 +39,7 @@ class ParallelFileMerger(FileMerger):
                 results = []
                 for i, chunk in enumerate(chunks):
                     output_file_chunk = f"{self.temp_file}.{i}"
-                    result = pool.apply_async(self._merge_chunks, args=(
-                        chunk, output_file_chunk))
+                    result = pool.apply_async(self._merge_chunks, args=(chunk, output_file_chunk))
                     results.append(result)
 
                 for result in results:

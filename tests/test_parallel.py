@@ -54,10 +54,8 @@ class TestParallelFileMerger(unittest.TestCase):
         chunk = ["file1.txt", "file2.txt"]
         output_file = "output.txt"
         with patch.object(ParallelFileMerger, '_create_intermediate') as mock_create_intermediate:
-            asyncio.run(self.file_merger._merge_chunks_async(
-                chunk, output_file))
-            mock_create_intermediate.assert_called_once_with(
-                chunk, output_file)
+            asyncio.run(self.file_merger._merge_chunks_async(chunk, output_file))
+            mock_create_intermediate.assert_called_once_with(chunk, output_file)
 
     @patch('multiprocessing.Pool')
     def test_merge_files(self, mock_pool):
