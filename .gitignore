@@ -5,3 +5,5 @@ dist
 *.egg-info
 .eggs
 .env
+dataset
+output.txt

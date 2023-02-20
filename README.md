@@ -77,7 +77,24 @@ If desired, the application can be installed with the following command:
 pip install .
 ```
 
-*Note: The installation is not necessary to run the application*.
+*Note: Package installation is recommended. But it is not necessary to run the application*.
+
+---
+
+## Creating a Fake Dataset (optional)
+You can create fake dataset for testing or development. The `faker` library is needed for this. If you have installed the `filemerger` package, it will come with faker.
+
+Otherwise you need to run following command first.
+```
+pip install faker
+```
+
+Example fake dataset creation code is as follows.
+
+```
+python setup.py generate_fake_dataset --num-files 10 --min-words-per-file 100 --max-words-per-file 500 --output-dir dataset/small_dataset
+```
+
 
 ---
 ## Usage
@@ -111,7 +128,7 @@ python file_merger.py
 Command line tool has a help feature that shows all the operations that can be done.
 
 ```
-$ python file_merger.py --help
+$ filemerger --help
 usage: file_merger.py [-h] [-i INPUT_DIR] [-o OUTPUT_DIR] [-f FILENAME] [-p] [-np N_OF_PROCESS] [-cf CHUNK_FILE] [-cl CHUNK_LINE]
 
 A tool that merges all input files into a single sorted output file
@@ -132,6 +149,7 @@ options:
   -cl CHUNK_LINE, --chunk-line CHUNK_LINE
                         Number of lines to process at once. DEFAULT 1024
 ```
+
 ---
 
 ## Examples

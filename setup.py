@@ -1,5 +1,6 @@
 """Installation script"""
 import setuptools
+from commands.generate_fake_dataset import GenerateFakeDataset
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -25,4 +26,10 @@ setuptools.setup(
             'filemerger=merge_files.main:cli_main',
         ],
     },
+    install_requires=[
+        'faker'
+    ],
+    cmdclass={
+        'generate_fake_dataset': GenerateFakeDataset,
+    }
 )
