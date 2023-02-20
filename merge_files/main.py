@@ -11,7 +11,22 @@ from .utils import (check_valid_path,
 
 def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_line: int,
          use_parallel: bool, n_of_process: int,) -> None:
+    """
+    Merges text files from a given directory and saves the merged file to an output directory.
 
+    Args:
+        input_dir (str): Path to the directory containing input files to be merged.
+        output_dir (str): Path to the directory where the output file will be saved.
+        filename (str): Name of the output file.
+        chunk_file (int): Maximum number of files to merge at once.
+        chunk_line (int): Maximum number of lines to read at once from each file.
+        use_parallel (bool): Whether to use parallel processing for the merging.
+        n_of_process (int): Number of processes to use if parallel processing is enabled.
+
+    Returns:
+        None: The function does not return anything, but prints information about the operation
+        to the console.
+    """
     input_dir = check_valid_path(input_dir)
     input_files = list_files(input_dir)
     if chunk_file < len(input_files):
@@ -25,10 +40,10 @@ def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_
         file_merger = BasicFileMerger(input_files, output_dir, filename, chunk_file,
                                       chunk_line)
     try:
-        tic = time.time()
+        tic = time.monotonic()
         file_merger.merge_files()
-        tac = time.time()
-        print("Elapsed time:", (tac-tic), "ms")
+        tac = time.monotonic()
+        print("Elapsed time:", (tac-tic), "s")
     except Exception as e:
         raise Exception(f"Something went wrong: {e}")
     else:
