@@ -11,6 +11,10 @@ A command-line tool was developed for merging multiple sorted text files into a 
 
 ### Merge Algorithm
 
+External sorting is a technique used to sort large amounts of data that cannot fit into memory all at once. When the amount of data to be sorted is too large to fit into the available memory, external sorting reads data in smaller chunks from external storage (such as hard disks or SSDs), sorts each chunk in memory, and then writes the sorted chunks back to external storage. Finally, the sorted chunks are merged to produce the final sorted output.
+
+External sorting is used to merge multiple sorted text files into a single, sorted output file. The code is efficient and scalable as it reads and processes the input files in chunks rather than loading the entire file into memory. The use of heapq.merge is also efficient as it merges the chunks in a way that is memory efficient and minimizes I/O operations. Additionally, the use of temporary files allows the code to scale to large files that might not fit into memory.
+
 `heapq.merge` is a Python function that takes multiple sorted input iterables and merges them into a single sorted iterable. It works by creating a heap of the first item from each iterable, and repeatedly popping the smallest item from the heap and adding it to the output. When an iterable is exhausted, its next item is automatically pulled from the next iterable in the list. This process continues until all input iterables have been exhausted and the entire output is produced. The algorithm used by heapq.merge is a variation of the merge step in merge sort. It has a time complexity of O(n log k), where n is the total number of items in all input iterables and k is the number of input iterables. It does not hold all items in memory at once. It uses a heap data structure to merge the items from the input iterables one at a time, only keeping a small number of items in memory at any given time. This means that heapq.merge() is memory-efficient and can handle very large iterables without running out of memory. However, heapq.merge is a blocking operation that is run synchronously and cannot be run asynchronously.
 
          Input Iterable 1               Input Iterable 2           Input Iterable 3
@@ -309,8 +313,7 @@ OK
 ## Improvements for the Future
 
 1. **Compression:** The ability to compress input files and decompress the merged output file can greatly reduce storage and transfer costs for large files.
-2. **Advanced merging algorithms:** The current implementation of the merging algorithm in the tool is a simple algorithm that uses heapq.merge(). Investigating and implementing more advanced merging algorithms can help to further improve the performance of the tool for certain use cases.
-3. **User-friendly CLI:** The current command-line interface (CLI) is suitable for experienced users, but it can be improved for ease of use by novice users. Adding more descriptive error messages, help texts, and examples could make the tool more accessible to a wider range of users.
-4. **Progress monitoring:** Providing a progress bar or other status updates during processing can help users to better understand the progress of the tool and make it more user-friendly.
-5. **Integration with other tools:** Integrating the tool with other tools, such as a file transfer or backup tool, can provide a more complete solution for users.
-6. **Performance profiling and optimization:** Conducting performance profiling and optimization on the codebase can help identify and fix bottlenecks, and further improve the performance of the tool.
+2. **User-friendly CLI:** The current command-line interface (CLI) is suitable for experienced users, but it can be improved for ease of use by novice users. Adding more descriptive error messages, help texts, and examples could make the tool more accessible to a wider range of users.
+3. **Progress monitoring:** Providing a progress bar or other status updates during processing can help users to better understand the progress of the tool and make it more user-friendly.
+4. **Integration with other tools:** Integrating the tool with other tools, such as a file transfer or backup tool, can provide a more complete solution for users.
+5. **Performance profiling and optimization:** Conducting performance profiling and optimization on the codebase can help identify and fix bottlenecks, and further improve the performance of the tool.
