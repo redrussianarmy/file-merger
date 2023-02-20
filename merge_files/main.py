@@ -30,7 +30,7 @@ def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_
         tac = time.time()
         print("Elapsed time:", (tac-tic), "ms")
     except Exception as e:
-        print("Something went wrong:", e)
+        raise Exception(f"Something went wrong: {e}")
     else:
         print("Operation is successful. The output file has been saved here:",
               os.path.join(output_dir, filename))
