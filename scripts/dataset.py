@@ -61,6 +61,7 @@ def generate_fake_dataset(num_files: int, min_words_per_file: int,
         output_file = os.path.join(output_dir, f'file_{i}.dat')
         with open(output_file, 'w') as f:
             f.write('\n'.join(words))
+    print("Fake dataset has been generated.")
 
 
 if __name__ == "__main__":

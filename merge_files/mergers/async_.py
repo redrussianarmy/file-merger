@@ -1,7 +1,7 @@
 import asyncio
 import shutil
 
-from .base import FileMerger
+from merge_files.mergers.base import FileMerger
 
 
 class AsyncFileMerger(FileMerger):

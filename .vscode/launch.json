@@ -10,7 +10,40 @@
             "request": "launch",
             "program": "${workspaceFolder}/file_merger.py",
             "args": [
-                "armel"
+                "-i",
+                "${workspaceFolder}\\dataset\\small_dataset",
+                "-f",
+                "${workspaceFolder}\\dataset\\output.txt"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Generate Fake Dataset",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/setup.py",
+            "args": [
+                "generate_fake_dataset",
+                "--num-files",
+                "5",
+                "--min-words-per-file",
+                "100",
+                "--max-words-per-file",
+                "500",
+                "--output-dir",
+                "dataset/small_dataset"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Coverage Report",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/setup.py",
+            "args": [
+                "coverage"
             ],
             "console": "integratedTerminal",
             "justMyCode": true

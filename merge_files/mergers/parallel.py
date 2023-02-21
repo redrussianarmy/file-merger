@@ -3,7 +3,7 @@ import multiprocessing
 import shutil
 from typing import List
 
-from .base import FileMerger
+from merge_files.mergers.base import FileMerger
 
 
 class ParallelFileMerger(FileMerger):

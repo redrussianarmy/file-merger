@@ -1,4 +1,4 @@
-from .base import FileMerger
+from merge_files.mergers.base import FileMerger
 
 
 class BasicFileMerger(FileMerger):

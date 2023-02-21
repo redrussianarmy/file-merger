@@ -43,7 +43,7 @@ def check_valid_path(path: str) -> str:
                 ref.extractall(extract_path)
                 return extract_path
         except (zipfile.BadZipfile, tarfile.ReadError) as e:
-            raise ValueError(f"File could not be opened successfully: {e}")
+            raise ValueError(f"File could not be opened successfully:") from e
 
     # if the path is not a folder or a supported compressed file type, raise an exception
     raise ValueError(f"Please enter a valid path: {path}")
