@@ -33,7 +33,7 @@ class GenerateFakeDataset(Command):
         self.max_words_per_file = int(self.max_words_per_file)
 
     def run(self):
-        from scripts.generate_dataset import generate_fake_dataset
+        from scripts.dataset import generate_fake_dataset
         generate_fake_dataset(
             num_files=self.num_files,
             min_words_per_file=self.min_words_per_file,

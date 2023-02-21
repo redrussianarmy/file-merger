@@ -1,10 +1,9 @@
 import unittest
 import os
-import io
 from unittest.mock import (patch,
                            call,
                            Mock)
-from merge_files.main import main
+from merge_files.main import merge
 
 
 @patch('merge_files.main.check_valid_path')
@@ -35,8 +34,8 @@ class TestMainFunction(unittest.TestCase):
         file_merger_mock.merge_files.return_value = None
 
         # Call the function being tested
-        main(self.input_dir, self.output_dir, self.filename, self.chunk_file,
-             self.chunk_line, self.use_parallel, self.n_of_process)
+        merge(self.input_dir, self.output_dir, self.filename, self.chunk_file,
+              self.chunk_line, self.use_parallel, self.n_of_process)
 
         # Assert that the appropriate classes were called with the correct arguments
         parallel_mock.assert_called_once_with(
@@ -59,8 +58,8 @@ class TestMainFunction(unittest.TestCase):
         file_merger_mock.merge_files.return_value = None
 
        # Call the function being tested
-        main(self.input_dir, self.output_dir, self.filename, self.chunk_file,
-             self.chunk_line, self.use_parallel, self.n_of_process)
+        merge(self.input_dir, self.output_dir, self.filename, self.chunk_file,
+              self.chunk_line, self.use_parallel, self.n_of_process)
 
         # Assert that the appropriate classes were called with the correct arguments
         async_mock.assert_called_once_with(
@@ -86,8 +85,8 @@ class TestMainFunction(unittest.TestCase):
         file_merger_mock.merge_files.return_value = None
 
        # Call the function being tested
-        main(self.input_dir, self.output_dir, self.filename, self.chunk_file,
-             self.chunk_line, self.use_parallel, self.n_of_process)
+        merge(self.input_dir, self.output_dir, self.filename, self.chunk_file,
+              self.chunk_line, self.use_parallel, self.n_of_process)
 
         # Assert that the appropriate classes were called with the correct arguments
         basic_mock.assert_called_once_with(
@@ -113,5 +112,5 @@ class TestMainFunction(unittest.TestCase):
 
        # Call the function being tested
         with self.assertRaises(Exception):
-            main(self.input_dir, self.output_dir, self.filename, self.chunk_file,
-                 self.chunk_line, self.use_parallel, self.n_of_process)
+            merge(self.input_dir, self.output_dir, self.filename, self.chunk_file,
+                  self.chunk_line, self.use_parallel, self.n_of_process)

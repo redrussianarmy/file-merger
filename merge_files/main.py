@@ -9,8 +9,8 @@ from .utils import (check_valid_path,
                     list_files)
 
 
-def main(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_line: int,
-         use_parallel: bool, n_of_process: int,) -> None:
+def merge(input_dir: str, output_dir: str, filename: str, chunk_file: int, chunk_line: int,
+          use_parallel: bool, n_of_process: int,) -> None:
     """
     Merges text files from a given directory and saves the merged file to an output directory.
 
@@ -87,7 +87,7 @@ def cli_main() -> None:
         "-cl", "--chunk-line", type=int, default=1024,
         help="Number of lines to process at once. DEFAULT 1024")
     args = parser.parse_args()
-    main(
+    merge(
         input_dir=args.input_dir,
         output_dir=args.output_dir,
         filename=args.filename,

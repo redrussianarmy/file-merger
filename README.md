@@ -59,7 +59,7 @@ A python command line tool that aims to find an efficient and scalable solution 
 An example output:
 
 ```
-./file_merger.py -i C:/Users/hboga/Documents/Mendix/small_example
+filemerger -i C:/Users/hboga/Documents/Mendix/small_example
 ```
 
 1. word1
@@ -72,6 +72,11 @@ An example output:
 ## Package Installation (optional)
 
 If desired, the application can be installed with the following command:
+
+```bash
+python setup.py install
+```
+or
 
 ```bash
 pip install .
@@ -237,8 +242,8 @@ Traceback (most recent call last):
   File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\Scripts\filemerger-script.py", line 33, in <module>
     sys.exit(load_entry_point('filemerger==1.0.0', 'console_scripts', 'filemerger')())
   File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\site-packages\merge_files\main.py", line 64, in cli_main
-    main(
-  File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\site-packages\merge_files\main.py", line 12, in main
+    merge(
+  File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\site-packages\merge_files\main.py", line 12, in merge
     input_dir = check_valid_path(input_dir)
   File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\site-packages\merge_files\utils.py", line 36, in check_valid_path
     raise ValueError(f"Please enter a valid path: {path}")
@@ -253,8 +258,8 @@ Traceback (most recent call last):
   File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\Scripts\filemerger-script.py", line 33, in <module>
     sys.exit(load_entry_point('filemerger==1.0.0', 'console_scripts', 'filemerger')())
   File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\site-packages\merge_files\main.py", line 64, in cli_main
-    main(
-  File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\site-packages\merge_files\main.py", line 12, in main
+    merge(
+  File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\site-packages\merge_files\main.py", line 12, in merge
     input_dir = check_valid_path(input_dir)
   File "C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\site-packages\merge_files\utils.py", line 10, in check_valid_path
     raise ValueError(

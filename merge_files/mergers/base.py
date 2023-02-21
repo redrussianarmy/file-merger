@@ -85,8 +85,8 @@ class FileMerger:
         """
         written_words = set()
 
-        print(f"Started to merge intermediate files")
         with open(self.output_file, "w") as output_handle:
+            print(f"Started to merge intermediate files")
             input_handles = [open(file_path, "r") for file_path in file_paths]
             input_iters = [iter(handle) for handle in input_handles]
             sorted_lines = sorted(heapq.merge(*input_iters, key=lambda x: x.strip()))
