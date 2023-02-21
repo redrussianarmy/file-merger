@@ -91,7 +91,7 @@ You can create fake dataset for testing or development. The `faker` library is n
 
 Otherwise you need to run following command first.
 ```
-pip install faker
+pip install faker==17.0.0
 ```
 
 Example fake dataset creation code is as follows.
@@ -282,54 +282,45 @@ writing top-level names to filemerger.egg-info\top_level.txt
 reading manifest file 'filemerger.egg-info\SOURCES.txt'
 writing manifest file 'filemerger.egg-info\SOURCES.txt'
 running build_ext
-test_merge_files_w_chunks (tests.test_async.TestAsyncFileMerger)
-Test that files are merged and intermediate files are merged with the expected argument ... ok
-test_split_into_files (tests.test_async.TestAsyncFileMerger)
-Test that files are merged asynchronously and intermediate files are created ... ok
-test_create_intermediate (tests.test_base.TestFileMerger)
-Test that intermediate files are correctly created and written. ... Created intermediate file in C:\Users\hboga\AppData\Local\Temp\tmpns033uvw\test_output.dat.0
-ok
-test_divide_files_into_chunks (tests.test_base.TestFileMerger)
-Test that files are correctly divided into chunks. ... ok
-test_merge_files_raises_not_implemented_error (tests.test_base.TestFileMerger)
-Test that merge_files() raises a NotImplementedError. ... ok
-test_merge_intermediate_files (tests.test_base.TestFileMerger)
-Test that intermediate files are merged and sorted correctly. ... Started to merge intermediate files
-ok
-test_merge_files_calls_merge_intermediate_files (tests.test_basic.BasicFileMergerTestCase) ... ok
-test_list_files_excludes_subdirectories (tests.test_list_files.ListFilesTestCase) ... ok
-test_list_files_returns_correct_files (tests.test_list_files.ListFilesTestCase) ... ok
-test_list_files_returns_list (tests.test_list_files.ListFilesTestCase) ... ok
-test_list_files_with_empty_dir (tests.test_list_files.ListFilesTestCase) ... C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\tempfile.py:837: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\hboga\\AppData\\Local\\Temp\\tmp_axpcvx6'>
-  _warnings.warn(warn_message, ResourceWarning)
-ok
-test_list_files_with_file (tests.test_list_files.ListFilesTestCase) ... ok
-test_list_files_with_file_path (tests.test_list_files.ListFilesTestCase) ... ok
-test_list_files_with_invalid_dir (tests.test_list_files.ListFilesTestCase) ... ok
-test_list_files_with_nonexistent_dir (tests.test_list_files.ListFilesTestCase) ... ok
-test_list_files_with_subdirectories (tests.test_list_files.ListFilesTestCase) ... ok
-test_async_file_merger_when_use_parallel_is_false (tests.test_main.TestMainFunction) ... ok
-test_basic_file_merger_when_chunk_file_greater_than_num_files (tests.test_main.TestMainFunction) ... ok
-test_parallel_file_merger_when_use_parallel_is_true (tests.test_main.TestMainFunction) ... ok
-test_raise_exception (tests.test_main.TestMainFunction) ... ok
-test_merge_files_w_chunks (tests.test_parallel.TestParallelFileMerger)
-Test the merge_files() method of ParallelFileMerger with multiple processes. ... C:\Users\hboga\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py:680: ResourceWarning: unclosed event loop <ProactorEventLoop running=False closed=False debug=False>
-  _warn(f"unclosed event loop {self!r}", ResourceWarning, source=self)
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-ok
-test_merge_files_with_fewer_processes (tests.test_parallel.TestParallelFileMerger)
-test_split_into_files_async (tests.test_parallel.TestParallelFileMerger)
-Test the _split_into_files_async() method of ParallelFileMerger. ... ok
-test_check_valid_path_with_folder (tests.test_valid_path.TestCheckValidPath) ... ok
-test_check_valid_path_with_invalid_path (tests.test_valid_path.TestCheckValidPath) ... ok
-test_check_valid_path_with_tar_file (tests.test_valid_path.TestCheckValidPath) ... ok
-test_check_valid_path_with_zip_file (tests.test_valid_path.TestCheckValidPath) ... ok
+(running tests...)
 
 ----------------------------------------------------------------------
-Ran 28 tests in 0.143s
+Ran 30 tests in 0.143s
 
 OK
 ```
+
+---
+
+## Coverage Report
+
+You can see how much of the written unit tests cover the project code.
+
+If you have installed the `filemerger` package, it will come with coverage package.
+
+Otherwise you need to run following command first.
+```
+pip install coverage==7.1.0
+```
+
+Run following command to generage coverage report.
+```
+python setup.py coverage
+```
+
+Current coverage rate is 92%
+
+| Module                          | statements | missing | excluded | coverage |
+|---------------------------------|------------|---------|----------|----------|
+| merge_files\__init__.py         |          1 |       0 |        0 |     100% |
+| merge_files\__main__.py         |          3 |       3 |        0 |       0% |
+| merge_files\main.py             |         34 |      10 |        0 |      71% |
+| merge_files\mergers\async_.py   |         20 |       0 |        0 |     100% |
+| merge_files\mergers\base.py     |         49 |       0 |        0 |     100% |
+| merge_files\mergers\basic.py    |          4 |       0 |        0 |     100% |
+| merge_files\mergers\parallel.py |         31 |       0 |        0 |     100% |
+| merge_files\utils.py            |         31 |       0 |        0 |     100% |
+| **Total**                       |    **173** |  **13** |    **0** |  **92%** |
 
 ---
 

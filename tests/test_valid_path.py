@@ -50,3 +50,13 @@ class TestCheckValidPath(unittest.TestCase):
         # test that an error is raised
         with self.assertRaises(ValueError):
             check_valid_path(invalid_path)
+
+    def test_check_valid_path_with_none(self):
+        with self.assertRaises(ValueError):
+            check_valid_path(None)
+
+    def test_check_valid_path_with_unsupported_file(self):
+        rar_path = os.path.join(self.test_dir, "my_folder.rar")
+
+        with self.assertRaises(ValueError):
+            check_valid_path(rar_path)

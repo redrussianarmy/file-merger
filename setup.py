@@ -1,6 +1,7 @@
 """Installation script"""
 import setuptools
 from commands.generate_fake_dataset import GenerateFakeDataset
+from commands.generate_coverage import CoverageCommand
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -27,9 +28,11 @@ setuptools.setup(
         ],
     },
     install_requires=[
-        'faker'
+        'faker==17.0.0',
+        'coverage==7.1.0'
     ],
     cmdclass={
         'generate_fake_dataset': GenerateFakeDataset,
+        'coverage': CoverageCommand,
     }
 )
