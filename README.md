@@ -316,11 +316,11 @@ Current coverage rate is 92%
 | merge_files\__main__.py         |          3 |       3 |        0 |       0% |
 | merge_files\main.py             |         34 |      10 |        0 |      71% |
 | merge_files\mergers\async_.py   |         20 |       0 |        0 |     100% |
-| merge_files\mergers\base.py     |         49 |       0 |        0 |     100% |
+| merge_files\mergers\base.py     |         50 |       0 |        0 |     100% |
 | merge_files\mergers\basic.py    |          4 |       0 |        0 |     100% |
 | merge_files\mergers\parallel.py |         31 |       0 |        0 |     100% |
 | merge_files\utils.py            |         31 |       0 |        0 |     100% |
-| **Total**                       |    **173** |  **13** |    **0** |  **92%** |
+| **Total**                       |    **174** |  **13** |    **0** |  **93%** |
 
 ---
 

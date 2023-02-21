@@ -46,10 +46,10 @@ class TestAsyncFileMerger(unittest.TestCase):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
-        # Call merge_files_async
+        # Call _split_into_files
         _ = loop.run_until_complete(self.file_merger._split_into_files())
 
-        file_extension = "*.dat"  # or "*.*" for all files
+        file_extension = "*.dat"
 
         # Combine the directory path with the file extension using glob
         files = glob.glob(os.path.join(self.input_dir, file_extension))

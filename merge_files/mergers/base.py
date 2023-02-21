@@ -86,7 +86,7 @@ class FileMerger:
         written_words = set()
 
         with open(self.output_file, "w") as output_handle:
-            print(f"Started to merge intermediate files")
+            print("Started to merge intermediate files..")
             input_handles = [open(file_path, "r") for file_path in file_paths]
             input_iters = [iter(handle) for handle in input_handles]
             sorted_lines = sorted(heapq.merge(*input_iters, key=lambda x: x.strip()))
@@ -100,6 +100,7 @@ class FileMerger:
                 handle.close()
                 if delete:
                     os.remove(handle.name)
+        print("Intermediate files have been merged.")
 
     def merge_files(self) -> None:
         raise NotImplementedError("Subclasses should implement this method.")
