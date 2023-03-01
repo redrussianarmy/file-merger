@@ -3,7 +3,7 @@
 ## How does it work?
 A command-line tool was developed for merging multiple sorted text files into a single, sorted output file. The tool supports three different strategies for merging files, depending on the size of the input files and the desired performance characteristics:
 
-**Basic strategy**: This strategy reads all input files into memory, merges the contents, and writes them to the output file. It is suitable for small inputs and performs all operations sequentially.
+**Basic strategy**: This strategy reads input files and lazily merge the input files, one element at a time and writes them to the output file. It is suitable for small inputs and performs all operations sequentially.
 
 **Async strategy**: This strategy splits the input files into chunks and processes each chunk in a separate coroutine using asyncio. This allows for concurrent execution of the file processing, but does not use multiple threads. The sorted results from each chunk are then written to intermediate files that are merged at the end. This approach can be more efficient than the basic strategy for larger inputs, and can help reduce memory usage compared to the parallel strategy.
 
@@ -42,11 +42,12 @@ In general, the solution should be efficient and scalable for most use cases. Th
 
 | Input File Size | Number of Files | Basic         | Async  | Parallel |
 | --------------- | --------------- | ------------- | ------ | -------- |
-| 16 KB           | 5               | 0.02s         | 0.02s  | 0.26s    |
-| 1.27 MB         | 500             | 1.72s         | 0.21s  | 0.44s    |
-| 11.4 MB         | 4000            | 1.02s         | 1.38s  | 0.95s    |
-| 39 MB           | 10000           | Out of memory | 8.5s   | 4.71s    |
-| 195 MB          | 50000           | Out of memory | 46.30s | 27.39s   |
+| 16 KB           | 5               | 0.01s         | 0.01s  | 0.35s    |
+| 1.27 MB         | 500             | 0.4s          | 0.25s  | 0.59s    |
+| 11.4 MB         | 4000            | 1.89s         | 1.25s  | 0.81s    |
+| 39 MB           | 10000           | 10.51s        | 4.67s  | 3.12s    |
+| 195 MB          | 50000           | 73.96s        | 33.70s | 13.43s   |
+| 1 GB            | 250000          | 514.64s       | 150.29s| 79.70s   |
 
 *Default parameters are used in performance measurements. File and Line chunk sizes are 1024, number of processes is 4.*
 

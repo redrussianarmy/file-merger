@@ -66,11 +66,14 @@ class FileMerger:
                     break
 
                 # Merge sorted chunks of words
-                sorted_chunk = sorted(heapq.merge(*chunks), key=lambda x: x.strip())
+                sorted_chunk = heapq.merge(*chunks)
 
-                # Write merged chunk of words to output file
+                written_words = set()
                 for word in sorted_chunk:
-                    output_handle.write(word)
+                    word = word.strip()
+                    if word not in written_words:
+                        output_handle.write(word + "\n")
+                        written_words.add(word)
 
         print(f"Created intermediate file in {output_file}")
         for handle in input_handles:
