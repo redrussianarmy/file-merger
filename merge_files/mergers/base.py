@@ -2,6 +2,7 @@ import os
 import heapq
 import itertools
 import tempfile
+import concurrent.futures
 from typing import List
 
 
@@ -75,6 +76,14 @@ class FileMerger:
         for handle in input_handles:
             handle.close()
 
+    def file_handle_generator(self, file_paths):
+        for file_path in file_paths:
+            yield file_path
+
+    def _merge_file(self, file_path):
+        with open(file_path, "r") as f:
+            return f.readlines()
+
     def _merge_intermediate_files(self, file_paths: List[str], delete: bool = False) -> None:
         """
         Merges the intermediate files into the final output file.
@@ -87,19 +96,19 @@ class FileMerger:
 
         with open(self.output_file, "w") as output_handle:
             print("Started to merge intermediate files..")
-            input_handles = [open(file_path, "r") for file_path in file_paths]
-            input_iters = [iter(handle) for handle in input_handles]
-            sorted_lines = sorted(heapq.merge(*input_iters, key=lambda x: x.strip()))
+            with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+                file_contents = list(executor.map(
+                    self._merge_file, self.file_handle_generator(file_paths)))
+            sorted_lines = heapq.merge(*file_contents, key=lambda x: x.strip())
             for word in sorted_lines:
                 word = word.strip()
                 if word not in written_words:
                     output_handle.write(word + "\n")
                     written_words.add(word)
 
-            for handle in input_handles:
-                handle.close()
-                if delete:
-                    os.remove(handle.name)
+            if delete:
+                for file_path in file_paths:
+                    os.remove(file_path)
         print("Intermediate files have been merged.")
 
     def merge_files(self) -> None:
