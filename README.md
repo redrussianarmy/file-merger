@@ -11,10 +11,6 @@ A command-line tool was developed for merging multiple sorted text files into a 
 
 ### Merge Algorithm
 
-External sorting is a technique used to sort large amounts of data that cannot fit into memory all at once. When the amount of data to be sorted is too large to fit into the available memory, external sorting reads data in smaller chunks from external storage (such as hard disks or SSDs), sorts each chunk in memory, and then writes the sorted chunks back to external storage. Finally, the sorted chunks are merged to produce the final sorted output.
-
-External sorting is used to merge multiple sorted text files into a single, sorted output file. The code is efficient and scalable as it reads and processes the input files in chunks rather than loading the entire file into memory. The use of heapq.merge is also efficient as it merges the chunks in a way that is memory efficient and minimizes I/O operations. Additionally, the use of temporary files allows the code to scale to large files that might not fit into memory.
-
 `heapq.merge` is a Python function that takes multiple sorted input iterables and merges them into a single sorted iterable. It works by creating a heap of the first item from each iterable, and repeatedly popping the smallest item from the heap and adding it to the output. When an iterable is exhausted, its next item is automatically pulled from the next iterable in the list. This process continues until all input iterables have been exhausted and the entire output is produced. The algorithm used by heapq.merge is a variation of the merge step in merge sort. It has a time complexity of O(n log k), where n is the total number of items in all input iterables and k is the number of input iterables. It does not hold all items in memory at once. It uses a heap data structure to merge the items from the input iterables one at a time, only keeping a small number of items in memory at any given time. This means that heapq.merge() is memory-efficient and can handle very large iterables without running out of memory. However, heapq.merge is a blocking operation that is run synchronously and cannot be run asynchronously.
 
          Input Iterable 1               Input Iterable 2           Input Iterable 3
@@ -60,7 +56,7 @@ A python command line tool that aims to find an efficient and scalable solution 
 An example output:
 
 ```
-filemerger -i C:/Users/hboga/Documents/Mendix/small_example
+filemerger -i input_files_dir
 ```
 
 1. word1
